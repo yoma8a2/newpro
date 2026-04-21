@@ -1,4 +1,4 @@
-name: SonarCloud Analysis
+name: Build
 on:
   push:
     branches:
@@ -6,15 +6,15 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  sonarcloud:
-    name: SonarCloud Scan
+  sonarqube:
+    name: SonarQube
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # مهم جداً لجلب تاريخ الكود
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # موجود تلقائياً في GitHub
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # هذا الذي أضفتيه أنتِ في الـ Secrets
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
