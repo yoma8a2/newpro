@@ -2,9 +2,10 @@ name: Build
 on:
   push:
     branches:
-      - main  # تأكدي أن اسم الفرع عندك main وليس master
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   sonarcloud:
     name: SonarCloud Scan
@@ -12,9 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # مهم جداً لسوناكلاود لقراءة تاريخ الكود
+          fetch-depth: 0
+          
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        # هذه هي الأداة الجديدة التي لا ترفض ملفات الويب
+        uses: sonarsource/sonarqube-scan-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # هذا موجود تلقائياً في جيت هاب
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # هذا اللي أضفتيه في الـ Secrets
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=yoma8a2
+            -Dsonar.projectKey=yoma8a2_newpro
+            -Dsonar.sources=.
+            -Dsonar.exclusions=**/vendor/**,**/node_modules/**
+            -Dsonar.sourceEncoding=UTF-8
